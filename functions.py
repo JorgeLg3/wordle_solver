@@ -108,5 +108,40 @@ def choose_opt(remaining_list, verbose=False):
             print(time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time)), idx+1, word, score_dict[word], time.time() - time_2)
     sorted_score = sort_dict(score_dict, reverse=False)
     best_score = list(sorted_score.keys())[0]
-    
+
     return best_score, sorted_score
+
+
+def auto_solver(word_list, solution, init_word='reina', verbose=False):
+    in_lists = []
+    not_l_lists = []
+    in_n_lists = ['.', '.', '.', '.', '.']
+    not_n_lists = [[], [], [], [], []]
+    not_w_lists = []
+    solved = False
+    iter = 1
+    remain_list = word_list
+
+    while not solved:
+        if verbose: print(iter)
+        # choose optimal word
+        if iter == 1:
+            try_word = init_word
+        else:
+            try_word, best_sol_list = choose_opt(remain_list)
+        if verbose: print(try_word)
+
+        # check coincidencies    
+        if try_word == solution:
+            solved = True
+            if verbose: print('solution:', try_word)
+            return try_word, iter
+        else:
+            not_w_lists.append(try_word)
+            in_lists, not_l_lists, in_n_lists, not_n_lists = compare_words(solution, try_word, in_list = in_lists, not_l_list = not_l_lists, in_n_list = in_n_lists, not_n_list = not_n_lists)
+            if verbose: print(in_lists, not_l_lists, in_n_lists, not_n_lists, not_w_lists)
+
+            # filt list
+            remain_list = wordle_filter(remain_list, in_list=in_lists, not_l_list=not_l_lists, in_n_list=in_n_lists, not_n_list=not_n_lists, not_w_list=not_w_lists)
+            if verbose: print(remain_list)
+            iter += 1
