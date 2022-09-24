@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # 3rd apps
     'rest_framework',
+    'corsheaders',
 
     # custom apps
     'solver.apps.SolverConfig',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -135,3 +137,10 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.AllowAny",
     ],
 }
+
+CORS_ALLOWED_ORIGINS = (
+    'http://localhost:3000',
+    'http://localhost:8000',
+)
+
+CSFR_TRUSTED_ORIGINS = ['localhost:3000']
