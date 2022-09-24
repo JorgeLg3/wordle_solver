@@ -1,0 +1,3 @@
+.venv/
+deprecated/
+__pycache__/
