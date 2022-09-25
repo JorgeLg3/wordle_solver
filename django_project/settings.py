@@ -34,7 +34,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1','wordle-solver-jorge.herokuapp.com']
 
 
 # Application definition
@@ -161,3 +161,15 @@ CORS_ALLOWED_ORIGINS = (
 )
 
 CSFR_TRUSTED_ORIGINS = ['localhost:3000']
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = [os.path.join(BASE_DIR, 'build/static')]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+django_heroku.settings(locals())
