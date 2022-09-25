@@ -116,7 +116,7 @@ function App() {
           <div className="remaining-text">Remaining: {remaining}</div>
           <ListContainer wordList={optList} setOption={chooseOption}/>
         </div>
-        <div  ref={myRef}>
+        <div ref={myRef} className='footer-div'>
           <Footer triggerFlip={footerObs}/>
         </div>
         
