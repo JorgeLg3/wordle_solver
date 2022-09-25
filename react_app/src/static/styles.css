@@ -18,6 +18,7 @@
     flex-direction: column;
     background-color: #fff;
     padding: 2rem;
+    padding-bottom: 0.5rem;
     max-width: 700px;
 }
 
@@ -176,6 +177,8 @@
     background-color: rgb(120, 124, 126);
 }
 
+
+/* WORD LIST */
 .remaining-text{
     text-align: center;
     font-size: 14px;
@@ -201,4 +204,29 @@
 
 .word-opt:hover{
     background-color: #cdd;
+}
+
+/* FOOTER */
+.footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.word-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+}
+
+.footer .card{
+    height: 30px;
+    width: 20px;
+}
+
+.footer .card-content{
+    font-size: 16px;
 }

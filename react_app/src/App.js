@@ -1,9 +1,10 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 
 import WordRow from "./components/WordRow";
 import ListContainer from "./components/ListContainer";
 import './static/styles.css'
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
   const [wordleList, setWordleList] = useState([]);
@@ -13,11 +14,21 @@ function App() {
   const [choices, setChoices] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
   const [patterns, setPatterns] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
   const [deactivate, setDeactivate] = useState(false);
+  const [footerObs, setFooterObs] = useState();
+
+  const myRef = useRef();
 
   let remaining = optList.length;
 
   useEffect(() => {
     getInitialList();
+
+    //observer to footer to trigger animation when scroll down
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      setFooterObs(entry.isIntersecting);
+    })
+    observer.observe(myRef.current);
   }, []);
 
   const handleSubmit = (event) => {
@@ -58,6 +69,7 @@ function App() {
       setChoices(updateList([...choices], count, wordGoal));
       setPatterns(updateList([...patterns], count, response_json.pattern));
       setCount(count+1);
+      setWordGoal('');
 
       if(count >= 5 || response_json.pattern.toString()==='x,x,x,x,x'){
         setDeactivate(true);
@@ -85,7 +97,7 @@ function App() {
     <div className="Page">
       <div className="App">
         <Header/>
-        <form onSubmit={handleSubmit} className="form">
+        <div className="form">
           <input id="word-input"
             name="word"
             type="text"
@@ -93,9 +105,10 @@ function App() {
             minLength="5"
             maxLength="5"
             placeholder="word..."
+            value={wordGoal}
           />
-          <button id="submit-button">CHECK</button>
-        </form>
+          <button id="submit-button" onClick={handleSubmit}>CHECK</button>
+        </div>
         <div id="wordle-container">
           {choices.map((word, idx) => <WordRow word={word} pattern={patterns[idx]}/>)}  
         </div>
@@ -103,6 +116,10 @@ function App() {
           <div className="remaining-text">Remaining: {remaining}</div>
           <ListContainer wordList={optList} setOption={chooseOption}/>
         </div>
+        <div  ref={myRef}>
+          <Footer triggerFlip={footerObs}/>
+        </div>
+        
         
       </div>
     </div>

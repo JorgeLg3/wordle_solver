@@ -4,7 +4,7 @@ const ListContainer = (props) => {
         <div className="list-container">
             {props.wordList.map((word) => 
                 <div className='word-opt' 
-                    //onClick={(e) => props.setOption(e.currentTarget.textContent)}
+                    onClick={(e) => props.setOption(e.currentTarget.textContent)}
                 >
                     {word.toUpperCase()}
                 </div>)}
