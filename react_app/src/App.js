@@ -1,9 +1,15 @@
 import {useState, useEffect} from "react";
 
+import WordRow from "./components/WordRow";
+import './static/styles.css'
+
 function App() {
   const [wordleList, setWordleList] = useState([]);
   const [optList, setOptList] = useState([]);
   const [wordGoal, setWordGoal] = useState('');
+  const [count, setCount] = useState(0);
+  const [choices, setChoices] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
+  const [patterns, setPatterns] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
 
   useEffect(() => {
     getInitialList();
@@ -42,9 +48,18 @@ function App() {
       let response_json = await response.json();
       setOptList(response_json.list);
       console.log(response_json.pattern);
+      setChoices(updateList([...choices], count, wordGoal));
+      setPatterns(updateList([...patterns], count, response_json.pattern));
+      setCount(count+1);
     } catch (error){
       console.log(error);
     }
+  }
+
+  const updateList = (data, idx, value)=> {
+    let newArr = data;
+    newArr[idx] = value;
+    return newArr;
   }
 
   return (
@@ -57,7 +72,13 @@ function App() {
         />
         <button>Submit</button>
       </form>
-      {optList.map((word) => <div>{word}</div>)}
+      <div id="wordle-container">
+        {choices.map((word, idx) => <WordRow word={word} pattern={patterns[idx]}/>)}  
+      </div>
+      <div>
+        {optList.map((word) => <div>{word}</div>)}
+      </div>
+      
     </div>
   );
 }
