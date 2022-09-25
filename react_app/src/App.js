@@ -1,7 +1,9 @@
 import {useState, useEffect} from "react";
 
 import WordRow from "./components/WordRow";
+import ListContainer from "./components/ListContainer";
 import './static/styles.css'
+import Header from "./components/Header";
 
 function App() {
   const [wordleList, setWordleList] = useState([]);
@@ -10,6 +12,9 @@ function App() {
   const [count, setCount] = useState(0);
   const [choices, setChoices] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
   const [patterns, setPatterns] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
+  const [deactivate, setDeactivate] = useState(false);
+
+  let remaining = optList.length;
 
   useEffect(() => {
     getInitialList();
@@ -17,7 +22,10 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    getOptimalList();
+    if (!deactivate){
+      getOptimalList();
+    }
+    
   }
 
   async function getInitialList(){
@@ -47,10 +55,14 @@ function App() {
     });
       let response_json = await response.json();
       setOptList(response_json.list);
-      console.log(response_json.pattern);
       setChoices(updateList([...choices], count, wordGoal));
       setPatterns(updateList([...patterns], count, response_json.pattern));
       setCount(count+1);
+
+      if(count >= 5 || response_json.pattern.toString()==='x,x,x,x,x'){
+        setDeactivate(true);
+        console.log('end');
+      }
     } catch (error){
       console.log(error);
     }
@@ -62,24 +74,39 @@ function App() {
     return newArr;
   }
 
+  // allow the user to click in one of the options to automatically update the input field
+  const chooseOption = (word) => {
+    setWordGoal(word);
+    console.log(word);
+    console.log(wordGoal);
+  }
+
   return (
-    <div className="App">
-      <form onSubmit={handleSubmit}>
-        <input
-          name="word"
-          type="text"
-          onChange={e => setWordGoal(e.target.value)}
-        />
-        <button>Submit</button>
-      </form>
-      <div id="wordle-container">
-        {choices.map((word, idx) => <WordRow word={word} pattern={patterns[idx]}/>)}  
+    <div className="Page">
+      <div className="App">
+        <Header/>
+        <form onSubmit={handleSubmit} className="form">
+          <input id="word-input"
+            name="word"
+            type="text"
+            onChange={e => setWordGoal(e.target.value)}
+            minLength="5"
+            maxLength="5"
+            placeholder="word..."
+          />
+          <button id="submit-button">CHECK</button>
+        </form>
+        <div id="wordle-container">
+          {choices.map((word, idx) => <WordRow word={word} pattern={patterns[idx]}/>)}  
+        </div>
+        <div>
+          <div className="remaining-text">Remaining: {remaining}</div>
+          <ListContainer wordList={optList} setOption={chooseOption}/>
+        </div>
+        
       </div>
-      <div>
-        {optList.map((word) => <div>{word}</div>)}
-      </div>
-      
     </div>
+    
   );
 }
 
