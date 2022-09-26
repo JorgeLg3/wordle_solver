@@ -15,6 +15,7 @@ function App() {
   const [patterns, setPatterns] = useState(['     ', '     ', '     ', '     ', '     ', '     ']);
   const [deactivate, setDeactivate] = useState(false);
   const [footerObs, setFooterObs] = useState();
+  const [valid, setValid] = useState(false);
 
   const myRef = useRef();
 
@@ -30,6 +31,18 @@ function App() {
     })
     observer.observe(myRef.current);
   }, []);
+
+  // Validate input word
+  useEffect(() =>{
+    if (wordGoal.length === 5 && !deactivate){
+      setValid(true);
+      console.log(valid);
+    } else{
+      setValid(false);
+    }
+
+    console.log(wordGoal.length)
+  }, [wordGoal]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -107,8 +120,9 @@ function App() {
             maxLength="5"
             placeholder="word..."
             value={wordGoal}
+            required
           />
-          <button id="submit-button" onClick={handleSubmit}>CHECK</button>
+          <button className={valid ? 'submit-button valid' : 'submit-button'} onClick={handleSubmit}>CHECK</button>
         </div>
         <div id="wordle-container">
           {choices.map((word, idx) => <WordRow word={word} pattern={patterns[idx]}/>)}  
