@@ -52,10 +52,10 @@ function App() {
 
   async function getOptimalList(){
     const request_data = {
-      "hypotehsis": wordGoal,
+      "hypotehsis": wordGoal.toLowerCase(),
        "remaining_list": optList
     }
-    
+    console.log(request_data);
     try{
       let response = await fetch("http://127.0.0.1:8000/", {
         method:  "POST",
@@ -65,6 +65,7 @@ function App() {
         body: JSON.stringify(request_data)
     });
       let response_json = await response.json();
+      
       setOptList(response_json.list);
       setChoices(updateList([...choices], count, wordGoal));
       setPatterns(updateList([...patterns], count, response_json.pattern));
