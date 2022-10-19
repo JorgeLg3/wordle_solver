@@ -21,7 +21,7 @@ function App() {
 
   let remaining = optList.length;
 
-  const apiUrl = process.env.NODE_ENV === 'production' ? 'https://wordle-autosolver.herokuapp.com/' : 'http://127.0.0.1:8000/';
+  const apiUrl = process.env.NODE_ENV === 'production' ? 'https://wordle-autosolver.herokuapp.com/api/' : 'http://127.0.0.1:8000/api/';
 
   useEffect(() => {
     getInitialList();
